@@ -66,16 +66,20 @@ class RuntimeEnvChecker {
 
   // TODO: add comments, etc ... wip
   static checkVersion (version, expectedVersion) {
-    if (typeof version !== 'string') {
+    if (version && typeof version !== 'string') {
       throw new TypeError(`The argument 'version' must be a string, instead got a '${typeof version}'`)
     }
-    if (typeof expectedVersion !== 'string') {
+    if (expectedVersion && typeof expectedVersion !== 'string') {
       throw new TypeError(`The argument 'expectedVersion' must be a string, instead got a '${typeof expectedVersion}'`)
     }
-    if (version !== null && expectedVersion !== null && !semver.satisfies(version, expectedVersion)) {
-      throw new Error(`RuntimeEnvChecker - found version, '${version}', but expected version '${expectedVersion}'`)
+    if (version !== null && expectedVersion !== null) {
+      if (!semver.satisfies(version, expectedVersion)) {
+        throw new Error(`RuntimeEnvChecker - found version, '${version}', but expected version '${expectedVersion}'`)
+      } else {
+        return true
+      }
     }
-    return true
+    return false
   }
 
   // TODO: add comments, etc ... wip
@@ -85,8 +89,6 @@ class RuntimeEnvChecker {
   ) {
     return RuntimeEnvChecker.checkVersion(nodeVersion, nodeVersionExpected)
   }
-
-  // TODO: add others ... wip
 }
 
 module.exports = RuntimeEnvChecker
