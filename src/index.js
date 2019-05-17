@@ -40,7 +40,7 @@ const engines = require('../package.json').engines
  */
 class RuntimeEnvChecker {
   /**
-   * Create a new instance of a RuntimeEnvChecker object.
+   * Create a new instance of a RuntimeEnvChecker class.
    *
    * Note that instancing is not allowed for this class because all its methods are static.
    *
@@ -51,8 +51,8 @@ class RuntimeEnvChecker {
   }
 
   /**
-   * Utility function that get some process-related info and wrap into an object
-   * (compatible with the CloudEvent standard), to fill its 'data' attribute.
+   * Utility method that get some process-related info
+   * and wraps them into an object.
    *
    * @static
    * @return {object} the object representation of process-related info data
@@ -64,7 +64,17 @@ class RuntimeEnvChecker {
     }
   }
 
-  // TODO: add comments, etc ... wip
+  /**
+   * Utility method that check if the given version is compatible
+   * with the given expected version (using then semver syntax).
+   *
+   * @static
+   * @param {!string} version the version to check (as a string)
+   * @param {!string} expectedVersion the expected version for the comparison (as a semver string)
+   * @return {boolean} true if version maches, false if one of versions is null
+   * @throws {TypeError} if at least an argument is wrong
+   * @throws {Error} if versions are comparable but does not matches
+   */
   static checkVersion (version, expectedVersion) {
     if (version && typeof version !== 'string') {
       throw new TypeError(`The argument 'version' must be a string, instead got a '${typeof version}'`)
@@ -82,7 +92,18 @@ class RuntimeEnvChecker {
     return false
   }
 
-  // TODO: add comments, etc ... wip
+  /**
+   * Utility method that check if the given Node.js version is compatible
+   * with the given expected version (using then semver syntax),
+   * usually read from a specific field in 'package.json'.
+   *
+   * @static
+   * @param {!string} version the version to check (as a string), by default current Node.js version
+   * @param {!string} expectedVersion the expected version for the comparison (as a semver string), by default current value for 'node', under 'engines' in 'package.json'
+   * @return {boolean} true if version maches, false if one of versions is null
+   * @throws {TypeError} if at least an argument is wrong
+   * @throws {Error} if versions are comparable but does not matches
+   */
   static checkNodeVersion (
     nodeVersion = process.version,
     nodeVersionExpected = engines.node
