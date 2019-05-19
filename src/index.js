@@ -98,8 +98,8 @@ class RuntimeEnvChecker {
    * usually read from a specific field in 'package.json'.
    *
    * @static
-   * @param {!string} version the version to check (as a string), by default current Node.js version
-   * @param {!string} expectedVersion the expected version for the comparison (as a semver string), by default current value for 'node', under 'engines' in 'package.json'
+   * @param {string} version the version to check (as a string), by default current Node.js version
+   * @param {string} expectedVersion the expected version for the comparison (as a semver string), by default current value for 'node', under 'engines' in 'package.json'
    * @return {boolean} true if version matches, false if one of versions is null
    * @throws {TypeError} if at least an argument is wrong
    * @throws {Error} if versions are comparable but does not matches
