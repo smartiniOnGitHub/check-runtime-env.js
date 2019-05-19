@@ -13,8 +13,8 @@
     "license-check:log": "npx legally > ./temp/license-check.log",
     "license-checker": "npx license-checker --production --onlyAllow='Apache-2.0;BSD-2-Clause;BSD-3-Clause;MIT;ISC'",
     "license-checker:log": "npm run license-checker | tee ./temp/license-checker.log",
-    "test:unit": "tap -J --comments --strict test/*.test.js",
-    "test:unit:debug": "tap -T --node-arg=--inspect-brk --comments --strict test/*.test.js",
+    "test:unit": "tap -J --comments --strict --no-esm test/*.test.js",
+    "test:unit:debug": "tap -T --node-arg=--inspect-brk --comments --strict --no-esm test/*.test.js",
     "test:coverage": "npm run test:unit -- --cov --coverage-report=html",
     "test": "npm run lint && npm run test:unit"
   },
@@ -31,7 +31,8 @@
   },
   "peerDependencies": {},
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=8.9.0",
+    "npm": ">=6.4.1"
   },
   "homepage": "https://github.com/smartiniOnGitHub/check-runtime-env.js#readme",
   "repository": {

@@ -99,16 +99,55 @@ class RuntimeEnvChecker {
    *
    * @static
    * @param {string} version the version to check (as a string), by default current Node.js version
-   * @param {string} expectedVersion the expected version for the comparison (as a semver string), by default current value for 'node', under 'engines' in 'package.json'
+   * @param {string} versionExpected the expected version for the comparison (as a semver string), by default current value for 'node', under 'engines' in 'package.json' (if set)
    * @return {boolean} true if version matches, false if one of versions is null
    * @throws {TypeError} if at least an argument is wrong
    * @throws {Error} if versions are comparable but does not matches
    */
-  static checkNodeVersion (
-    nodeVersion = process.version,
-    nodeVersionExpected = engines.node
+  static checkVersionNode (
+    version = process.version,
+    versionExpected = engines.node
   ) {
-    return RuntimeEnvChecker.checkVersion(nodeVersion, nodeVersionExpected)
+    return RuntimeEnvChecker.checkVersion(version, versionExpected)
+  }
+
+  /**
+   * Utility method that check if the given NPM version is compatible
+   * with the given expected version (using then semver syntax),
+   * usually read from a specific field in 'package.json'.
+   *
+   * @static
+   * @param {string} version the version to check (as a string), default null
+   * @param {string} versionExpected the expected version for the comparison (as a semver string), by default current value for 'npm', under 'engines' in 'package.json' (if set)
+   * @return {boolean} true if version matches, false if one of versions is null
+   * @throws {TypeError} if at least an argument is wrong
+   * @throws {Error} if versions are comparable but does not matches
+   */
+  static checkVersionNpm (
+    version = null,
+    versionExpected = engines.npm
+  ) {
+    return RuntimeEnvChecker.checkVersion(version, versionExpected)
+  }
+
+  /**
+   * Utility method that gets current NPM version.
+   * Note that NPM execution is done in a child process (only to get its version),
+   * but in a synchronous way.
+   *
+   * @static
+   * @return {string} npm version (as a string) if found, otherwise null
+   */
+  static getVersionNpm () {
+    const { execSync } = require('child_process')
+    let npmVersion = null
+    try {
+      npmVersion = execSync('npm -version')
+      npmVersion = npmVersion.toString().replace(/(\r\n|\n|\r)/gm, '')
+    } catch (e) {
+      // error running the command, maybe npm not installed or not found
+    }
+    return npmVersion
   }
 }
 

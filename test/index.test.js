@@ -55,42 +55,36 @@ test('ensure process info returns right values', (t) => {
 
 /** @test {RuntimeEnvChecker} */
 test('ensure version checks are done in the right way', (t) => {
-  t.plan(34)
+  t.plan(46)
 
   {
     const comment = 'testing checkVersion'
     t.comment(comment)
     t.throws(function () {
       const check = REC.checkVersion()
-      assert(check === true) // never executed
+      assert(check === false) // never executed
     }, Error, 'Expected exception when checking version with wrong arguments')
-    t.throws(function () {
-      const check = REC.checkVersion(null)
-      assert(check === true) // never executed
-    }, Error, 'Expected exception when checking version with wrong arguments')
-    t.throws(function () {
-      const check = REC.checkVersion(null, null)
-      assert(check === true) // never executed
-    }, Error, 'Expected exception when checking version with wrong arguments')
+    t.ok(!REC.checkVersion(null)) // not ok but does not throw error
+    t.ok(!REC.checkVersion(null, null)) // not ok but does not throw error
     t.throws(function () {
       const check = REC.checkVersion('1.0')
-      assert(check === true) // never executed
+      assert(check === false) // never executed
     }, Error, 'Expected exception when checking version with wrong arguments')
     t.throws(function () {
       const check = REC.checkVersion(1.0, '1.0')
-      assert(check === true) // never executed
+      assert(check === false) // never executed
     }, Error, 'Expected exception when checking version with wrong arguments')
     t.throws(function () {
       const check = REC.checkVersion('1.0', 1.0)
-      assert(check === true) // never executed
+      assert(check === false) // never executed
     }, Error, 'Expected exception when checking version with wrong arguments')
     t.throws(function () {
       const check = REC.checkVersion('0.1.0', '1.0.0')
-      assert(check === true) // never executed
+      assert(check === false) // never executed
     }, Error, `Expected exception when checking version that doesn't match`)
     t.throws(function () {
       const check = REC.checkVersion('3.2.1', '>=1.0.0 <2.0.0')
-      assert(check === true) // never executed
+      assert(check === false) // never executed
     }, Error, `Expected exception when checking version that doesn't match`)
     t.ok(REC.checkVersion('1.0.0', '1.0.0'))
     t.ok(REC.checkVersion('1.2.3', '1.x'))
@@ -106,31 +100,62 @@ test('ensure version checks are done in the right way', (t) => {
   }
 
   {
-    const comment = 'testing checkNodeVersion'
+    const comment = 'testing checkVersionNode'
     t.comment(comment)
     t.comment(`Node.js current version: ${nodeVersion}`)
     t.comment(`Node.js version expected in 'package.json': ${engines.node}`)
 
-    t.ok(REC.checkNodeVersion()) // ok because of default values
-    t.ok(REC.checkNodeVersion('10.15.3')) // ok because of default values
-    t.ok(REC.checkNodeVersion(undefined)) // ok because of default values
-    t.ok(REC.checkNodeVersion(undefined, undefined)) // ok because of default values
-    t.strictEqual(REC.checkNodeVersion(null, null), false) // not error, but false result
-    t.strictEqual(REC.checkNodeVersion('10.15.3', null), false) // not error, but false result
+    t.ok(REC.checkVersionNode()) // ok because of default values
+    t.ok(REC.checkVersionNode('10.15.3')) // ok because of default values
+    t.ok(REC.checkVersionNode(undefined)) // ok because of default values
+    t.ok(REC.checkVersionNode(undefined, undefined)) // ok because of default values
+    t.strictEqual(REC.checkVersionNode(null, null), false) // not error, but false result
+    t.strictEqual(REC.checkVersionNode('10.15.3', null), false) // not error, but false result
     t.throws(function () {
-      const check = REC.checkNodeVersion(6.17, '>=8.9.0')
-      assert(check === true) // never executed
+      const check = REC.checkVersionNode(6.17, '>=8.9.0')
+      assert(check === false) // never executed
     }, Error, 'Expected exception when checking node version with wrong arguments')
     t.throws(function () {
-      const check = REC.checkNodeVersion('6.17.0', '>=8.9.0')
-      assert(check === true) // never executed
+      const check = REC.checkVersionNode('6.17.0', '>=8.9.0')
+      assert(check === false) // never executed
     }, Error, 'Expected exception when checking node version with wrong values')
-    t.ok(REC.checkNodeVersion('8.16.0', '8.16.0'))
-    t.ok(REC.checkNodeVersion('8.16.0', '>=8.9.0'))
+    t.ok(REC.checkVersionNode('8.16.0', '8.16.0'))
+    t.ok(REC.checkVersionNode('8.16.0', '>=8.9.0'))
     t.ok(REC.checkVersion('10.13.0', '>=8.9.0'))
     t.ok(REC.checkVersion('10.13.0', '>=8.9.0 <12.0.0'))
     t.ok(REC.checkVersion('10.15.3', engines.node))
     t.ok(REC.checkVersion('10.15.3', `${engines.node}`))
-    t.strictEqual(REC.checkNodeVersion('10.15.3', engines.notExisting), true) // ok because of default values with a not existing expected value (undefined)
+    t.strictEqual(REC.checkVersionNode('10.15.3', engines.notExisting), true) // ok because of default values with a not existing expected value (undefined)
+  }
+
+  {
+    const comment = 'testing getVersionNpm and checkVersionNpm'
+    t.comment(comment)
+    const npmVersion = REC.getVersionNpm()
+    assert(npmVersion !== null)
+    t.ok(npmVersion)
+    t.comment(`NPM current version: ${npmVersion}`)
+    t.comment(`NPM version expected in 'package.json': ${engines.npm}`)
+
+    t.ok(!REC.checkVersionNpm()) // not ok because of default values
+    t.ok(!REC.checkVersionNpm(null)) // not ok because of default values
+    t.ok(REC.checkVersionNpm('6.4.1')) // ok because of default values
+    t.ok(REC.checkVersionNpm('6.4.1', '>=6.4.1'))
+    t.ok(!REC.checkVersionNpm(undefined)) // not ok because of default values
+    t.ok(!REC.checkVersionNpm(undefined, undefined)) // not ok because of default values
+    t.strictEqual(REC.checkVersionNpm(null, null), false) // not error, but false result
+    t.strictEqual(REC.checkVersionNpm('6.4.1', null), false) // not error, but false result
+    t.throws(function () {
+      const check = REC.checkVersionNode('6.17.0', '>=8.9.0')
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking node version with wrong values')
+    t.throws(function () {
+      const check = REC.checkVersionNpm('6.4.0')
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking npm version with wrong values')
+    t.throws(function () {
+      const check = REC.checkVersionNpm('6.4.0', '>=6.4.1')
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking npm version with wrong values')
   }
 })
