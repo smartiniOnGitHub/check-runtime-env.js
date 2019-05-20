@@ -65,6 +65,29 @@ class RuntimeEnvChecker {
   }
 
   /**
+   * Utility method that tell if the given version is compatible
+   * with the expected version (using then semver syntax).
+   *
+   * @static
+   * @param {!string} version the version to check (as a string)
+   * @param {!string} expectedVersion the expected version for the comparison (as a semver string)
+   * @return {boolean} true if version is compatible with the given constraint, otherwise false
+   * @throws {TypeError} if at least an argument is wrong
+   */
+  static isVersionCompatible (version, expectedVersion) {
+    if (version && typeof version !== 'string') {
+      throw new TypeError(`The argument 'version' must be a string, instead got a '${typeof version}'`)
+    }
+    if (expectedVersion && typeof expectedVersion !== 'string') {
+      throw new TypeError(`The argument 'expectedVersion' must be a string, instead got a '${typeof expectedVersion}'`)
+    }
+    if (version !== null && expectedVersion !== null) {
+      return semver.satisfies(version, expectedVersion)
+    }
+    return false
+  }
+
+  /**
    * Utility method that check if the given version is compatible
    * with the given expected version (using then semver syntax).
    *
@@ -74,16 +97,12 @@ class RuntimeEnvChecker {
    * @return {boolean} true if version matches, false if one of versions is null
    * @throws {TypeError} if at least an argument is wrong
    * @throws {Error} if versions are comparable but does not matches
+   * @see isVersionCompatible
    */
   static checkVersion (version, expectedVersion) {
-    if (version && typeof version !== 'string') {
-      throw new TypeError(`The argument 'version' must be a string, instead got a '${typeof version}'`)
-    }
-    if (expectedVersion && typeof expectedVersion !== 'string') {
-      throw new TypeError(`The argument 'expectedVersion' must be a string, instead got a '${typeof expectedVersion}'`)
-    }
+    const compatible = RuntimeEnvChecker.isVersionCompatible(version, expectedVersion)
     if (version !== null && expectedVersion !== null) {
-      if (!semver.satisfies(version, expectedVersion)) {
+      if (!compatible) {
         throw new Error(`RuntimeEnvChecker - found version, '${version}', but expected version '${expectedVersion}'`)
       } else {
         return true
@@ -103,8 +122,9 @@ class RuntimeEnvChecker {
    * @return {boolean} true if version matches, false if one of versions is null
    * @throws {TypeError} if at least an argument is wrong
    * @throws {Error} if versions are comparable but does not matches
+   * @see checkVersion
    */
-  static checkVersionNode (
+  static checkVersionOfNode (
     version = process.version,
     versionExpected = engines.node
   ) {
@@ -122,8 +142,9 @@ class RuntimeEnvChecker {
    * @return {boolean} true if version matches, false if one of versions is null
    * @throws {TypeError} if at least an argument is wrong
    * @throws {Error} if versions are comparable but does not matches
+   * @see checkVersion
    */
-  static checkVersionNpm (
+  static checkVersionOfNpm (
     version = null,
     versionExpected = engines.npm
   ) {
@@ -132,13 +153,13 @@ class RuntimeEnvChecker {
 
   /**
    * Utility method that gets current NPM version.
-   * Note that NPM execution is done in a child process (only to get its version),
-   * but in a synchronous way.
+   * Note that NPM is executed in a child process (but only to get its version),
+   * in a synchronous way.
    *
    * @static
    * @return {string} npm version (as a string) if found, otherwise null
    */
-  static getVersionNpm () {
+  static getVersionOfNpm () {
     const { execSync } = require('child_process')
     let npmVersion = null
     try {
