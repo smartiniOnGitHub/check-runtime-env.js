@@ -103,7 +103,7 @@ class RuntimeEnvChecker {
     const compatible = RuntimeEnvChecker.isVersionCompatible(version, expectedVersion)
     if (version !== null && expectedVersion !== null) {
       if (!compatible) {
-        throw new Error(`RuntimeEnvChecker - found version, '${version}', but expected version '${expectedVersion}'`)
+        throw new Error(`RuntimeEnvChecker - found version '${version}', but expected version '${expectedVersion}'`)
       } else {
         return true
       }
