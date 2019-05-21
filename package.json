@@ -1,6 +1,6 @@
 {
   "name": "check-runtime-env",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Node.js implementation of a checker for some runtime environment properties",
   "main": "src/index",
   "scripts": {
@@ -27,7 +27,7 @@
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-node": "^1.0.4",
     "standard": "^12.0.1",
-    "tap": "^12.7.0"
+    "tap": "^14.1.1"
   },
   "peerDependencies": {},
   "engines": {
