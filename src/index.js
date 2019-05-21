@@ -103,9 +103,10 @@ class RuntimeEnvChecker {
    * @throws {Error} if at least an argument is wrong
    */
   static isVersionCompatible (version, expectedVersion) {
-    RuntimeEnvChecker.checkStringNotEmpty(version, 'version')
-    RuntimeEnvChecker.checkStringNotEmpty(expectedVersion, 'expectedVersion')
-    return semver.satisfies(version, expectedVersion)
+    if (RuntimeEnvChecker.isStringNotEmpty(version) && RuntimeEnvChecker.isStringNotEmpty(expectedVersion)) {
+      return semver.satisfies(version, expectedVersion)
+    }
+    return false
   }
 
   /**
@@ -133,21 +134,19 @@ class RuntimeEnvChecker {
    * @static
    * @param {!string} version the version to check (as a string)
    * @param {!string} expectedVersion the expected version for the comparison (as a semver string)
-   * @return {boolean} true if version matches, false if one of versions is null
+   * @return {boolean} true if version matches
    * @throws {Error} if at least an argument is wrong
-   * @throws {Error} if versions are comparable but does not matches
+   * @throws {Error} if versions does not matches
    * @see isVersionCompatible
    */
   static checkVersion (version, expectedVersion) {
+    RuntimeEnvChecker.checkStringNotEmpty(version, 'version')
+    RuntimeEnvChecker.checkStringNotEmpty(expectedVersion, 'expectedVersion')
     const compatible = RuntimeEnvChecker.isVersionCompatible(version, expectedVersion)
-    if (version !== null && expectedVersion !== null) {
-      if (!compatible) {
-        throw new Error(`RuntimeEnvChecker - found version '${version}', but expected version '${expectedVersion}'`)
-      } else {
-        return true
-      }
+    if (compatible !== true) {
+      throw new Error(`RuntimeEnvChecker - found version '${version}', but expected version '${expectedVersion}'`)
     }
-    return false
+    return true
   }
 
   /**
