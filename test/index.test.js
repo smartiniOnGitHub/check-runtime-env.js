@@ -158,4 +158,6 @@ test('ensure version checks are done in the right way', (t) => {
       assert(check === false) // never executed
     }, Error, 'Expected exception when checking npm version with wrong values')
   }
+
+  t.comment('tests finished.') // add to shift to the bottom new 'Summary results' of Tap
 })
