@@ -65,6 +65,34 @@ class RuntimeEnvChecker {
   }
 
   /**
+   * Tell if the given argument is defined and not null.
+   *
+   * @static
+   * @param {object} arg the object to check
+   * @return {boolean} true if defined and not null, false otherwise
+   */
+  static isDefinedAndNotNull (arg) {
+    return (arg !== undefined && arg !== null)
+  }
+
+  /**
+   * Tell if the given argument is defined and not null,
+   * is a string and is not empty.
+   *
+   * See {@link RuntimeEnvChecker.isDefinedAndNotNull}.
+   *
+   * @static
+   * @param {object} arg the object to check
+   * @return {boolean} true if it's a not empty string, false otherwise
+   */
+  static isStringNotEmpty (arg) {
+    return (RuntimeEnvChecker.isDefinedAndNotNull(arg) &&
+      (typeof arg === 'string') &&
+      (arg.length > 0)
+    )
+  }
+
+  /**
    * Utility method that tell if the given version is compatible
    * with the expected version (using then semver syntax).
    *
@@ -72,19 +100,30 @@ class RuntimeEnvChecker {
    * @param {!string} version the version to check (as a string)
    * @param {!string} expectedVersion the expected version for the comparison (as a semver string)
    * @return {boolean} true if version is compatible with the given constraint, otherwise false
-   * @throws {TypeError} if at least an argument is wrong
+   * @throws {Error} if at least an argument is wrong
    */
   static isVersionCompatible (version, expectedVersion) {
-    if (version && typeof version !== 'string') {
-      throw new TypeError(`The argument 'version' must be a string, instead got a '${typeof version}'`)
+    RuntimeEnvChecker.checkStringNotEmpty(version, 'version')
+    RuntimeEnvChecker.checkStringNotEmpty(expectedVersion, 'expectedVersion')
+    return semver.satisfies(version, expectedVersion)
+  }
+
+  /**
+   * Ensure that the given argument ia a not empty string.
+   *
+   * See {@link RuntimeEnvChecker.isStringNotEmpty}.
+   *
+   * @static
+   * @param {object} arg the object to check
+   * @param {string} name the name to use in generated error (if any), empty name as default
+   * @return {boolean} true if it's a not empty string
+   * @throws {Error} if it's an empty string or it's null or undefined
+   */
+  static checkStringNotEmpty (arg, name = '') {
+    if (RuntimeEnvChecker.isStringNotEmpty(arg) !== true) {
+      throw new Error(`RuntimeEnvChecker - the string '${name}' must be not empty`)
     }
-    if (expectedVersion && typeof expectedVersion !== 'string') {
-      throw new TypeError(`The argument 'expectedVersion' must be a string, instead got a '${typeof expectedVersion}'`)
-    }
-    if (version !== null && expectedVersion !== null) {
-      return semver.satisfies(version, expectedVersion)
-    }
-    return false
+    return true
   }
 
   /**
@@ -95,7 +134,7 @@ class RuntimeEnvChecker {
    * @param {!string} version the version to check (as a string)
    * @param {!string} expectedVersion the expected version for the comparison (as a semver string)
    * @return {boolean} true if version matches, false if one of versions is null
-   * @throws {TypeError} if at least an argument is wrong
+   * @throws {Error} if at least an argument is wrong
    * @throws {Error} if versions are comparable but does not matches
    * @see isVersionCompatible
    */
@@ -120,7 +159,7 @@ class RuntimeEnvChecker {
    * @param {string} version the version to check (as a string), by default current Node.js version
    * @param {string} versionExpected the expected version for the comparison (as a semver string), by default current value for 'node', under 'engines' in 'package.json' (if set)
    * @return {boolean} true if version matches, false if one of versions is null
-   * @throws {TypeError} if at least an argument is wrong
+   * @throws {Error} if at least an argument is wrong
    * @throws {Error} if versions are comparable but does not matches
    * @see checkVersion
    */
@@ -140,7 +179,7 @@ class RuntimeEnvChecker {
    * @param {string} version the version to check (as a string), default null
    * @param {string} versionExpected the expected version for the comparison (as a semver string), by default current value for 'npm', under 'engines' in 'package.json' (if set)
    * @return {boolean} true if version matches, false if one of versions is null
-   * @throws {TypeError} if at least an argument is wrong
+   * @throws {Error} if at least an argument is wrong
    * @throws {Error} if versions are comparable but does not matches
    * @see checkVersion
    */

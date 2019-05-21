@@ -64,8 +64,14 @@ test('ensure version checks are done in the right way', (t) => {
       const check = REC.checkVersion()
       assert(check === false) // never executed
     }, Error, 'Expected exception when checking version with wrong arguments')
-    t.ok(!REC.checkVersion(null)) // not ok but does not throw error
-    t.ok(!REC.checkVersion(null, null)) // not ok but does not throw error
+    t.throws(function () {
+      const check = REC.checkVersion(null)
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking version with wrong arguments')
+    t.throws(function () {
+      const check = REC.checkVersion(null, null)
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking version with wrong arguments')
     t.throws(function () {
       const check = REC.checkVersion('1.0')
       assert(check === false) // never executed
@@ -109,8 +115,14 @@ test('ensure version checks are done in the right way', (t) => {
     t.ok(REC.checkVersionOfNode('10.15.3')) // ok because of default values
     t.ok(REC.checkVersionOfNode(undefined)) // ok because of default values
     t.ok(REC.checkVersionOfNode(undefined, undefined)) // ok because of default values
-    t.strictEqual(REC.checkVersionOfNode(null, null), false) // not error, but false result
-    t.strictEqual(REC.checkVersionOfNode('10.15.3', null), false) // not error, but false result
+    t.throws(function () {
+      const check = REC.checkVersionOfNode(null, null)
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking node version with wrong arguments')
+    t.throws(function () {
+      const check = REC.checkVersionOfNode('10.15.3', null)
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking node version with wrong arguments')
     t.throws(function () {
       const check = REC.checkVersionOfNode(6.17, '>=8.9.0')
       assert(check === false) // never executed
@@ -137,16 +149,32 @@ test('ensure version checks are done in the right way', (t) => {
     t.comment(`NPM current version: ${npmVersion}`)
     t.comment(`NPM version expected in 'package.json': ${engines.npm}`)
 
-    t.ok(!REC.checkVersionOfNpm()) // not ok because of default values
-    t.ok(!REC.checkVersionOfNpm(null)) // not ok because of default values
-    t.ok(REC.checkVersionOfNpm('6.4.1')) // ok because of default values
-    t.ok(REC.checkVersionOfNpm('6.4.1', '>=6.4.1'))
-    t.ok(!REC.checkVersionOfNpm(undefined)) // not ok because of default values
-    t.ok(!REC.checkVersionOfNpm(undefined, undefined)) // not ok because of default values
-    t.strictEqual(REC.checkVersionOfNpm(null, null), false) // not error, but false result
-    t.strictEqual(REC.checkVersionOfNpm('6.4.1', null), false) // not error, but false result
     t.throws(function () {
-      const check = REC.checkVersionOfNode('6.17.0', '>=8.9.0')
+      const check = REC.checkVersionOfNpm()
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking node version with wrong values')
+    t.throws(function () {
+      const check = REC.checkVersionOfNpm(null)
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking node version with wrong values')
+    t.throws(function () {
+      const check = REC.checkVersionOfNpm(undefined)
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking node version with wrong values')
+    t.throws(function () {
+      const check = REC.checkVersionOfNpm(undefined, undefined)
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking node version with wrong values')
+    t.throws(function () {
+      const check = REC.checkVersionOfNpm(null, null)
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking node version with wrong values')
+    t.throws(function () {
+      const check = REC.checkVersionOfNpm('6.4.1', null)
+      assert(check === false) // never executed
+    }, Error, 'Expected exception when checking node version with wrong values')
+    t.throws(function () {
+      const check = REC.checkVersionOfNpm('6.4.0', '>=6.9.0')
       assert(check === false) // never executed
     }, Error, 'Expected exception when checking node version with wrong values')
     t.throws(function () {
@@ -157,7 +185,33 @@ test('ensure version checks are done in the right way', (t) => {
       const check = REC.checkVersionOfNpm('6.4.0', '>=6.4.1')
       assert(check === false) // never executed
     }, Error, 'Expected exception when checking npm version with wrong values')
+    t.ok(REC.checkVersionOfNpm('6.4.1')) // ok because of default values
+    t.ok(REC.checkVersionOfNpm('6.4.1', '>=6.4.1'))
   }
+})
 
-  t.comment('tests finished.') // add to shift to the bottom new 'Summary results' of Tap
+/** @test {RuntimeEnvChecker} */
+test('ensure utility methods works in the right way', (t) => {
+  t.plan(6)
+
+  t.ok(REC)
+
+  t.comment('testing checkStringNotEmpty and other utility methods')
+  t.throws(function () {
+    const check = REC.checkStringNotEmpty()
+    assert(check === false) // never executed
+  }, Error, 'Expected exception when checking for not empty string with wrong arguments')
+  t.throws(function () {
+    const check = REC.checkStringNotEmpty(undefined)
+    assert(check === false) // never executed
+  }, Error, 'Expected exception when checking for not empty string with wrong arguments')
+  t.throws(function () {
+    const check = REC.checkStringNotEmpty(null)
+    assert(check === false) // never executed
+  }, Error, 'Expected exception when checking for not empty string with wrong arguments')
+  t.throws(function () {
+    const check = REC.checkStringNotEmpty('')
+    assert(check === false) // never executed
+  }, Error, 'Expected exception when checking for not empty string with wrong arguments')
+  t.ok(REC.checkStringNotEmpty('1.0.0'))
 })
