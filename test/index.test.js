@@ -55,11 +55,13 @@ test('ensure process info returns right values', (t) => {
 
 /** @test {RuntimeEnvChecker} */
 test('ensure version checks are done in the right way', (t) => {
-  t.plan(46)
+  t.plan(48)
 
   {
     const comment = 'testing checkVersion'
     t.comment(comment)
+    t.ok(!REC.isVersionCompatible('', ''))
+    t.ok(REC.isVersionCompatible('10.13.0', '>=8.9.0 <12.0.0'))
     t.throws(function () {
       const check = REC.checkVersion()
       assert(check === false) // never executed
