@@ -15,7 +15,7 @@
     "license-checker:log": "npm run license-checker | tee ./temp/license-checker.log",
     "test:unit": "tap -J --comments --strict --no-esm test/*.test.js",
     "test:unit:debug": "tap -T --node-arg=--inspect-brk --comments --strict --no-esm test/*.test.js",
-    "test:coverage": "npm run test:unit -- --cov --coverage-report=html",
+    "test:coverage": "NODE_ENV=production npm run test:unit -- --cov --coverage-report=html",
     "test": "npm run lint && npm run test:unit"
   },
   "dependencies": {
