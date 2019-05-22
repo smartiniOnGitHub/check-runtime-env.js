@@ -178,7 +178,6 @@ class RuntimeEnvChecker {
    * See {@link RuntimeEnvChecker.isEnvVarDefined}.
    *
    * @static
-   * @param {string} name the name of the variable to check
    * @return {boolean} true if it's a not empty string
    * @throws {Error} if it's not production
    */
