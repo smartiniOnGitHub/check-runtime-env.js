@@ -193,10 +193,8 @@ test('ensure version checks are done in the right way', (t) => {
 })
 
 /** @test {RuntimeEnvChecker} */
-test('ensure utility methods works in the right way', (t) => {
-  t.plan(6)
-
-  t.ok(REC)
+test('ensure generic utility methods works in the right way', (t) => {
+  t.plan(5)
 
   t.comment('testing checkStringNotEmpty and other utility methods')
   t.throws(function () {
@@ -216,4 +214,57 @@ test('ensure utility methods works in the right way', (t) => {
     assert(check === false) // never executed
   }, Error, 'Expected exception when checking for not empty string with wrong arguments')
   t.ok(REC.checkStringNotEmpty('1.0.0'))
+})
+
+/** @test {RuntimeEnvChecker} */
+test('ensure utility methods on env vars works in the right way', (t) => {
+  if (REC.isEnvVarDefined('NODE_ENV')) {
+    t.plan(9)
+  } else {
+    t.plan(5)
+  }
+
+  t.comment('testing checkEnvVarDefined and related utility methods')
+  t.comment(`Node.js environment is: '${process.env.NODE_ENV}'`)
+  t.throws(function () {
+    const check = REC.checkEnvVarDefined()
+    assert(check === false) // never executed
+  }, Error, 'Expected exception when checking for defined env var with wrong arguments')
+  t.throws(function () {
+    const check = REC.checkEnvVarDefined(undefined)
+    assert(check === false) // never executed
+  }, Error, 'Expected exception when checking for defined env var with wrong arguments')
+  t.throws(function () {
+    const check = REC.checkEnvVarDefined(null)
+    assert(check === false) // never executed
+  }, Error, 'Expected exception when checking for defined env var with wrong arguments')
+  t.throws(function () {
+    const check = REC.checkEnvVarDefined('')
+    assert(check === false) // never executed
+  }, Error, 'Expected exception when checking for defined env var with wrong arguments')
+  t.throws(function () {
+    const check = REC.checkEnvVarDefined('NOT_EXISTING')
+    assert(check === false) // never executed
+  }, Error, 'Expected exception when checking for defined env var with wrong arguments')
+  // could be undefined, so I do the following test only when it's defined
+  if (REC.isEnvVarDefined('NODE_ENV')) {
+    t.ok(REC.checkEnvVarDefined('NODE_ENV'))
+    const nodeEnv = REC.getNodeEnv()
+    switch (nodeEnv) {
+      case 'production':
+        t.ok(nodeEnv)
+        t.ok(REC.isNodeEnvProduction())
+        t.ok(REC.checkNodeEnvProduction())
+        break
+      default:
+        t.ok(!nodeEnv)
+        t.ok(!REC.isNodeEnvProduction())
+        t.throws(function () {
+          const check = REC.checkNodeEnvProduction()
+          assert(check === false) // never executed
+        }, Error, 'Expected exception when checking for defined env var with wrong arguments')
+        break
+    }
+  }
+  t.comment('testing checkEnvVarDefined and related utility methods finished\n\n\n') // workaround to have all comments visible
 })

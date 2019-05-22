@@ -86,10 +86,38 @@ class RuntimeEnvChecker {
    * @return {boolean} true if it's a not empty string, false otherwise
    */
   static isStringNotEmpty (arg) {
-    return (RuntimeEnvChecker.isDefinedAndNotNull(arg) &&
+    return ((RuntimeEnvChecker.isDefinedAndNotNull(arg) &&
       (typeof arg === 'string') &&
-      (arg.length > 0)
+      (arg.length > 0))
     )
+  }
+
+  /**
+   * Tell if the environment variable with the given name
+   * is defined and has a value.
+   *
+   * See {@link RuntimeEnvChecker.isStringNotEmpty}.
+   *
+   * @static
+   * @param {!string} name the name to check
+   * @return {boolean} true if it's defined and has a value, false otherwise
+   */
+  static isEnvVarDefined (name) {
+    return RuntimeEnvChecker.isStringNotEmpty(process.env[name])
+  }
+
+  /**
+   * Tell if the current Node.js environment is production.
+   *
+   * See {@link RuntimeEnvChecker.isEnvVarDefined}.
+   *
+   * @static
+   * @return {boolean} true if it's production, false otherwise
+   */
+  static isNodeEnvProduction () {
+    const nodeEnv = RuntimeEnvChecker.getNodeEnv()
+    return (RuntimeEnvChecker.isEnvVarDefined('NODE_ENV') &&
+      nodeEnv === 'production')
   }
 
   /**
@@ -110,7 +138,7 @@ class RuntimeEnvChecker {
   }
 
   /**
-   * Ensure that the given argument ia a not empty string.
+   * Ensure that the given argument is a not empty string.
    *
    * See {@link RuntimeEnvChecker.isStringNotEmpty}.
    *
@@ -123,6 +151,40 @@ class RuntimeEnvChecker {
   static checkStringNotEmpty (arg, name = '') {
     if (RuntimeEnvChecker.isStringNotEmpty(arg) !== true) {
       throw new Error(`RuntimeEnvChecker - the string '${name}' must be not empty`)
+    }
+    return true
+  }
+
+  /**
+   * Ensure that the given environment variable is defined and has a value.
+   *
+   * See {@link RuntimeEnvChecker.isEnvVarDefined}.
+   *
+   * @static
+   * @param {string} name the name of the variable to check
+   * @return {boolean} true if it's defined and has a value
+   * @throws {Error} if it's not defined or does not have a value
+   */
+  static checkEnvVarDefined (name) {
+    if (RuntimeEnvChecker.isEnvVarDefined(name) !== true) {
+      throw new Error(`RuntimeEnvChecker - the env var '${name}' must be defined and not empty`)
+    }
+    return true
+  }
+
+  /**
+   * Ensure that the current Node.js environment is production.
+   *
+   * See {@link RuntimeEnvChecker.isEnvVarDefined}.
+   *
+   * @static
+   * @param {string} name the name of the variable to check
+   * @return {boolean} true if it's a not empty string
+   * @throws {Error} if it's not production
+   */
+  static checkNodeEnvProduction () {
+    if (RuntimeEnvChecker.isNodeEnvProduction() !== true) {
+      throw new Error(`RuntimeEnvChecker - Node.js environment is '${RuntimeEnvChecker.getNodeEnv()}' and not 'production'`)
     }
     return true
   }
@@ -207,6 +269,16 @@ class RuntimeEnvChecker {
       // error running the command, maybe npm not installed or not found
     }
     return npmVersion
+  }
+
+  /**
+   * Utility method that gets the value of Node.js environment variable.
+   *
+   * @static
+   * @return {string} Node.js env var NODE_ENV value (as a string)
+   */
+  static getNodeEnv () {
+    return process.env.NODE_ENV
   }
 }
 
