@@ -60,6 +60,14 @@ try {
   console.log(e)
 }
 console.log(`Tell the given version '10.13.0', if it's compatible with the constraint '>=12.0.0': ${RuntimeEnvChecker.isVersionCompatible('10.13.0', '>=12.0.0')}, but anyway no error raised here`)
+
+console.log(`Check that the given string is not empty (generic), success: ${RuntimeEnvChecker.checkStringNotEmpty('10.13.0')}`)
+console.log(`Node.js environment is: '${process.env.NODE_ENV}'`)
+console.log(`Node.js environment from the library is: '${RuntimeEnvChecker.getNodeEnv()}'`)
+console.log(`Node.js environment is defined: ${RuntimeEnvChecker.isEnvVarDefined('NODE_ENV')}`)
+console.log(`Node.js environment is production: ${RuntimeEnvChecker.isNodeEnvProduction()}`)
+// console.log(`Check that Node.js environment is production: ${RuntimeEnvChecker.checkNodeEnvProduction()}`)
+
 console.log(`No more tests.`)
 
 console.log(`\nSample script: end execution.`)
