@@ -21,14 +21,14 @@
 
 const assert = require('assert')
 
-console.log(`Sample script: start execution ...\n`)
+console.log('Sample script: start execution ...\n')
 
 // reference the library, not needed if using destructuring assignment, see below
 const RuntimeEnvChecker = require('../src/') // from local path
 assert(RuntimeEnvChecker !== null)
 
 // call some static method exposed by the class ...
-console.log(`\nCalling some RuntimeEnvChecker static methods, and related diagnostics:`)
+console.log('\nCalling some RuntimeEnvChecker static methods, and related diagnostics:')
 
 // get some runtime data and version constraints
 const nodeVersion = process.version
@@ -47,14 +47,14 @@ console.log(`Node.js version expected in 'package.json': ${engines.node}`)
 console.log(`NPM current version: ${npmVersion}`)
 console.log(`NPM version expected in 'package.json': ${engines.npm}`)
 
-console.log(`Doing some tests; note that a check not satisfied will throw Error ...`)
+console.log('Doing some tests; note that a check not satisfied will throw Error ...')
 console.log(`Check version of Node, using defaults, success: ${RuntimeEnvChecker.checkVersionOfNode()}`)
 console.log(`Check version of Node, using explicit values, success: ${RuntimeEnvChecker.checkVersionOfNode(nodeVersion, expectedNodeVersion)}`)
 console.log(`Check version of NPM, using NPM release found, and NPM expected value implicit, success: ${RuntimeEnvChecker.checkVersionOfNpm(npmVersion)}`)
 console.log(`Check version of NPM, using explicit values, success: ${RuntimeEnvChecker.checkVersionOfNpm(npmVersion, expectedNPMVersion)}`)
 console.log(`Check version (generic), using explicit values, success: ${RuntimeEnvChecker.checkVersion('10.13.0', '>=8.9.0 <12.0.0')}`)
 try {
-  console.log(`Sample failure in check version (generic): expected error`)
+  console.log('Sample failure in check version (generic): expected error')
   console.log(`Check version (generic), using explicit values, success: ${RuntimeEnvChecker.checkVersion('10.13.0', '>=12.0.0')}`)
 } catch (e) {
   console.log(e)
@@ -68,7 +68,8 @@ console.log(`Node.js environment is defined: ${RuntimeEnvChecker.isEnvVarDefined
 console.log(`Node.js environment is production: ${RuntimeEnvChecker.isNodeEnvProduction()}`)
 // console.log(`Check that Node.js environment is production: ${RuntimeEnvChecker.checkNodeEnvProduction()}`)
 
-console.log(`No more tests.`)
+console.log('No more tests.')
 
-console.log(`\nSample script: end execution.`)
+console.log('\nSample script: end execution.')
+assert(true) // all good here
 // end of script

@@ -63,7 +63,7 @@ test('ensure version checks are done in the right way', (t) => {
     t.ok(!REC.isVersionCompatible('', ''))
     t.ok(REC.isVersionCompatible('10.13.0', '>=8.9.0'))
     t.ok(REC.isVersionCompatible('10.13.0', '>=8.9.0 <12.0.0'))
-    t.strictSame(REC.isVersionCompatible('10.13.0', '>=16.0.0'), false)
+    t.strictSame(REC.isVersionCompatible('10.13.0', '>=99.9.9'), false)
     t.throws(function () {
       const check = REC.checkVersion()
       assert(check === false) // never executed
@@ -91,11 +91,11 @@ test('ensure version checks are done in the right way', (t) => {
     t.throws(function () {
       const check = REC.checkVersion('0.1.0', '1.0.0')
       assert(check === false) // never executed
-    }, Error, `Expected exception when checking version that doesn't match`)
+    }, Error, 'Expected exception when checking version that doesn\'t match')
     t.throws(function () {
       const check = REC.checkVersion('3.2.1', '>=1.0.0 <2.0.0')
       assert(check === false) // never executed
-    }, Error, `Expected exception when checking version that doesn't match`)
+    }, Error, 'Expected exception when checking version that doesn\'t match')
     t.ok(REC.checkVersion('1.0.0', '1.0.0'))
     t.ok(REC.checkVersion('1.2.3', '1.x'))
     t.ok(REC.checkVersion('1.2.9', '1.2.x'))
