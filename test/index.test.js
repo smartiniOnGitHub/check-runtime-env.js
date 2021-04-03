@@ -33,7 +33,7 @@ test('ensure objects exported by index script, exists and are of the right type'
 
   t.comment('testing RuntimeEnvChecker class')
   t.ok(REC)
-  t.strictEqual(typeof REC, 'function')
+  t.equal(typeof REC, 'function')
   t.ok(engines)
 
   t.throws(function () {
@@ -49,7 +49,7 @@ test('ensure process info returns right values', (t) => {
   t.comment('testing processInfo')
   const procInfo = REC.processInfo()
   t.ok(procInfo)
-  t.strictEqual(typeof procInfo, 'object')
+  t.equal(typeof procInfo, 'object')
   // but do not test too low level details for attributes inside procInfo
 })
 
@@ -141,7 +141,7 @@ test('ensure version checks are done in the right way', (t) => {
     t.ok(REC.checkVersion('10.13.0', '>=8.9.0 <12.0.0'))
     t.ok(REC.checkVersion('10.15.3', engines.node))
     t.ok(REC.checkVersion('10.15.3', `${engines.node}`))
-    t.strictEqual(REC.checkVersionOfNode('10.15.3', engines.notExisting), true) // ok because of default values with a not existing expected value (undefined)
+    t.equal(REC.checkVersionOfNode('10.15.3', engines.notExisting), true) // ok because of default values with a not existing expected value (undefined)
   }
 
   {
@@ -189,7 +189,7 @@ test('ensure version checks are done in the right way', (t) => {
       const check = REC.checkVersionOfNpm('6.4.0', '>=6.4.1')
       assert(check === false) // never executed
     }, Error, 'Expected exception when checking npm version with wrong values')
-    t.ok(REC.checkVersionOfNpm('6.4.1')) // ok because of default values
+    t.ok(REC.checkVersionOfNpm('6.8.0')) // ok because of default values
     t.ok(REC.checkVersionOfNpm('6.4.1', '>=6.4.1'))
   }
 })

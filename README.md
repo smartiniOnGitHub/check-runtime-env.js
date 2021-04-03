@@ -83,7 +83,16 @@ the release wanted, and if not throw an Error (or instead log a Warning).
 
 ## Requirements
 
-Node.js 8.9.0 or later; NPM 6.4.1 or later.
+Node.js 10 LTS (but recommended 10.23.1) or later; NPM 6.8.0 or later.
+
+
+## Sources
+
+Source code is all inside main repo:
+[check-runtime-env.js](https://github.com/smartiniOnGitHub/check-runtime-env.js/).
+
+Documentation generated from source code (library API):
+[here](https://smartiniongithub.github.io/check-runtime-env.js/).
 
 
 ## Note

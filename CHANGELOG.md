@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.3.0](https://github.com/smartiniOnGitHub/check-runtime-env.js/releases/tag/0.3.0) (unreleased)
+Summary Changelog:
+- Update requirements to Node.js 10 LTS (10.13.0 or later)
+- Update dependencies
+- Update dependencies for the development environment
+- Generate documentation from sources with JSDoc, no more ESDoc
+
 ## [0.2.0](https://github.com/smartiniOnGitHub/check-runtime-env.js/releases/tag/0.2.0) (2019-05-24)
 Summary Changelog:
 - Add some generic utility methods to verify ('is') and checker ('check') 
