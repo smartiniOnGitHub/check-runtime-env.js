@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,9 @@ const pid = require('process').pid
 
 /** Get the list of engines needed, if specified in 'package.json' */
 const engines = require('../package.json').engines
+
+/** Get the number of available CPU */
+const { cpus } = require('os')
 
 /**
  * Checker for Runtime Environment properties.
@@ -89,6 +92,22 @@ class RuntimeEnvChecker {
     return ((RuntimeEnvChecker.isDefinedAndNotNull(arg) &&
       (typeof arg === 'string') &&
       (arg.length > 0))
+    )
+  }
+
+  /**
+   * Tell if the given argument is defined and not null,
+   * and is a boolean.
+   *
+   * See {@link RuntimeEnvChecker.isDefinedAndNotNull}.
+   *
+   * @static
+   * @param {object} arg the object to check
+   * @return {boolean} true if it's a boolean, false otherwise
+   */
+  static isBoolean (arg) {
+    return (RuntimeEnvChecker.isDefinedAndNotNull(arg) &&
+      (typeof arg === 'boolean')
     )
   }
 
@@ -251,6 +270,24 @@ class RuntimeEnvChecker {
   }
 
   /**
+   * Ensure that the given argument is a true value.
+   *
+   * See {@link RuntimeEnvChecker.isBoolean}.
+   *
+   * @static
+   * @param {object} arg the object to check
+   * @param {string} name the name to use in generated error (if any), empty name as default
+   * @return {boolean} true if it's a true value
+   * @throws {Error} if it's a false value or it's null or undefined
+   */
+  static checkBoolean (arg, name = '') {
+    if (RuntimeEnvChecker.isBoolean(arg) !== true || arg !== true) {
+      throw new Error(`RuntimeEnvChecker - the boolean '${name}' must be true`)
+    }
+    return true
+  }
+
+  /**
    * Utility method that gets current NPM version.
    * Note that NPM is executed in a child process (but only to get its version),
    * in a synchronous way.
@@ -278,6 +315,16 @@ class RuntimeEnvChecker {
    */
   static getNodeEnv () {
     return process.env.NODE_ENV
+  }
+
+  /**
+   * Utility method that returns the number of total CPU available.
+   *
+   * @static
+   * @return {int} the number of available CPU
+   */
+  static getAvailableCpu () {
+    return cpus().length
   }
 }
 

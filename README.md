@@ -20,7 +20,7 @@ Get a reference to the library:
 
 ```js
 // Node.js example
-const assert = require('assert')
+const assert = require('assert').strict
 
 // reference the library, not needed if using destructuring assignment, see below
 const RuntimeEnvChecker = require('../src/') // from local path
@@ -83,7 +83,7 @@ the release wanted, and if not throw an Error (or instead log a Warning).
 
 ## Requirements
 
-Node.js 10 LTS (but recommended 10.23.1) or later; NPM 6.8.0 or later.
+Node.js 10 LTS (but recommended 10.24.1) or later; NPM 6.8.0 or later.
 
 
 ## Sources

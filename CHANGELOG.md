@@ -3,8 +3,12 @@
 ## [0.3.0](https://github.com/smartiniOnGitHub/check-runtime-env.js/releases/tag/0.3.0) (unreleased)
 Summary Changelog:
 - Update requirements to Node.js 10 LTS (10.13.0 or later)
+- Use Node.js assertions but in strict mode now
+- Add some utility function to check boolean values/conditions, 
+  get the total number of CPU, etc
 - Update dependencies
-- Update dependencies for the development environment
+- Update dependencies for the development environment and 
+  Tap to latest (15.x) for compatibility with required Node.js version
 - Generate documentation from sources with JSDoc, no more ESDoc
 
 ## [0.2.0](https://github.com/smartiniOnGitHub/check-runtime-env.js/releases/tag/0.2.0) (2019-05-24)
