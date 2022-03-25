@@ -349,3 +349,21 @@ test('ensure numbers about memory (total, free) are managed in the right way', (
 
   t.end()
 })
+
+/** @test {RuntimeEnvChecker} */
+test('ensure functions/checks on strict mode works in the right way', (t) => {
+  t.comment('testing isStrictMode')
+
+  const safe = REC.isStrictMode()
+  t.ok(safe)
+  t.equal(typeof safe, 'boolean')
+  t.equal(safe, true)
+
+  const ensureSafeMode = REC.checkBoolean(safe)
+  t.ok(ensureSafeMode)
+
+  const checkSafeMode = REC.checkStrictMode()
+  t.ok(checkSafeMode)
+
+  t.end()
+})

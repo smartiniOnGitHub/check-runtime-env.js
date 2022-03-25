@@ -341,6 +341,35 @@ class RuntimeEnvChecker {
   static getAvailableCpu () {
     return cpus().length
   }
+
+  /**
+   * Utility method that returns if current code is running
+   * with JavaScript in strict mode (as generally should be now).
+   *
+   * @static
+   * @return {boolean} true if strict mode is enabled
+   */
+  static isStrictMode () {
+    const isStrict = (function () { return !this })()
+    return isStrict
+  }
+
+  /**
+   * Ensure that current code is running
+   * with JavaScript in strict mode (as generally should be now).
+   *
+   * See {@link RuntimeEnvChecker.isStrictMode}.
+   *
+   * @static
+   * @return {boolean} true if strict mode is enabled
+   * @throws {Error} if it's a false value or it's null or undefined
+   */
+  static checkStrictMode () {
+    if (RuntimeEnvChecker.isStrictMode() !== true) {
+      throw new Error('RuntimeEnvChecker - JavaScript strict mode must be enabled')
+    }
+    return true
+  }
 }
 
 module.exports = RuntimeEnvChecker
