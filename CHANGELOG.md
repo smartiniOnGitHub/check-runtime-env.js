@@ -5,7 +5,8 @@ Summary Changelog:
 - Update requirements to Node.js 10 LTS (10.13.0 or later)
 - Use Node.js assertions but in strict mode now
 - Add some utility function to check boolean values/conditions, 
-  get the total number of CPU, etc
+  get the total number of CPU, get total and free memory, 
+  tell/check if strict mode is enabled, etc
 - Update dependencies
 - Update dependencies for the development environment and 
   Tap to latest (15.x) for compatibility with required Node.js version

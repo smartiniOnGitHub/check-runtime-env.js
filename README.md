@@ -71,6 +71,10 @@ console.log(`Node.js environment is defined: ${RuntimeEnvChecker.isEnvVarDefined
 console.log(`Node.js environment is production: ${RuntimeEnvChecker.isNodeEnvProduction()}`)
 // console.log(`Check that Node.js environment is production: ${RuntimeEnvChecker.checkNodeEnvProduction()}`)
 
+console.log('Ensure JavaScript strict mode is enabled (or an Exception will be thrown):')
+const checkSafeMode = RuntimeEnvChecker.checkStrictMode()
+console.log(`strict mode enabled : ${checkSafeMode}`)
+
 console.log(`No more tests.`)
 ```
 
