@@ -326,3 +326,26 @@ test('ensure number of cpu available (total) is managed in the right way', (t) =
 
   t.end()
 })
+
+/** @test {RuntimeEnvChecker} */
+test('ensure numbers about memory (total, free) are managed in the right way', (t) => {
+  t.comment('testing memoryInfo')
+
+  const mem = REC.memoryInfo()
+  t.ok(mem)
+  t.equal(typeof mem.total, 'number')
+  t.equal(typeof mem.free, 'number')
+  t.ok(mem.total > 1048576) // very minimal example: expect at least 1 MB (1024**2) total memory
+  // t.ok(mem.total > 1073741824) // example: expect at least 1 GB (1024**3) total memory
+
+  const tmemTot = REC.checkBoolean(mem.total >= 1024 ** 2)
+  // const tmemTot = REC.checkBoolean(mem.total >= 1024 ** 3)
+  t.ok(tmemTot)
+  t.equal(tmemTot, true)
+  const tmemFree = REC.checkBoolean(mem.free >= (tmemTot * 0.01)) // very minimal example: expect at least 1% of total memory free
+  // const tmemFree = REC.checkBoolean(mem.free >= (tmemTot * 0.1)) // example: expect at least 10% of total memory free
+  t.ok(tmemFree)
+  t.equal(tmemFree, true)
+
+  t.end()
+})

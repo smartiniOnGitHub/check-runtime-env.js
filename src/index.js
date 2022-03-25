@@ -22,9 +22,10 @@
  */
 
 const semver = require('semver')
+const os = require('os')
 
 /** Get the host name where this code is runninng */
-const hostname = require('os').hostname()
+const hostname = os.hostname()
 
 /** Get the process id (pid) where this code is runninng */
 const pid = require('process').pid
@@ -64,6 +65,20 @@ class RuntimeEnvChecker {
     return {
       hostname,
       pid
+    }
+  }
+
+  /**
+   * Utility method that get some info
+   * about memory (total, available) and wraps them into an object.
+   *
+   * @static
+   * @return {object} the object representation of some memory-related info
+   */
+  static memoryInfo () {
+    return {
+      total: os.totalmem(),
+      free: os.freemem()
     }
   }
 
