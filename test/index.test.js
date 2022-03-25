@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 'use strict'
 
-const assert = require('assert')
+const assert = require('assert').strict
 const test = require('tap').test
 
 const REC = require('../src/') // reference the library
@@ -29,9 +29,8 @@ assert(engines !== null)
 
 /** @test {RuntimeEnvChecker} */
 test('ensure objects exported by index script, exists and are of the right type', (t) => {
-  t.plan(4)
-
   t.comment('testing RuntimeEnvChecker class')
+
   t.ok(REC)
   t.equal(typeof REC, 'function')
   t.ok(engines)
@@ -40,22 +39,23 @@ test('ensure objects exported by index script, exists and are of the right type'
     const rec = new REC()
     assert(rec === null) // never executed
   }, Error, 'Expected exception when creating a RuntimeEnvChecker instance')
+
+  t.end()
 })
 
 /** @test {RuntimeEnvChecker} */
 test('ensure process info returns right values', (t) => {
-  t.plan(2)
-
   t.comment('testing processInfo')
   const procInfo = REC.processInfo()
   t.ok(procInfo)
   t.equal(typeof procInfo, 'object')
   // but do not test too low level details for attributes inside procInfo
+  t.end()
 })
 
 /** @test {RuntimeEnvChecker} */
 test('ensure version checks are done in the right way', (t) => {
-  t.plan(50)
+  t.comment('testing version checks')
 
   {
     const comment = 'testing checkVersion'
@@ -192,12 +192,12 @@ test('ensure version checks are done in the right way', (t) => {
     t.ok(REC.checkVersionOfNpm('6.8.0')) // ok because of default values
     t.ok(REC.checkVersionOfNpm('6.4.1', '>=6.4.1'))
   }
+
+  t.end()
 })
 
 /** @test {RuntimeEnvChecker} */
 test('ensure generic utility methods works in the right way', (t) => {
-  t.plan(5)
-
   t.comment('testing checkStringNotEmpty and other utility methods')
   t.throws(function () {
     const check = REC.checkStringNotEmpty()
@@ -216,6 +216,7 @@ test('ensure generic utility methods works in the right way', (t) => {
     assert(check === false) // never executed
   }, Error, 'Expected exception when checking for not empty string with wrong arguments')
   t.ok(REC.checkStringNotEmpty('1.0.0'))
+  t.end()
 })
 
 /** @test {RuntimeEnvChecker} */
@@ -269,4 +270,59 @@ test('ensure utility methods on env vars works in the right way', (t) => {
     }
   }
   t.comment('testing checkEnvVarDefined and related utility methods finished\n\n\n') // workaround to have all comments visible
+  t.end()
+})
+
+/** @test {RuntimeEnvChecker} */
+test('ensure some general check functions works in the right way', (t) => {
+  t.comment('testing checkBoolean, for boolean values and conditions')
+
+  t.throws(function () {
+    const fu = REC.checkBoolean() // test for undefined
+    assert(fu === false) // never executed
+  }, Error, 'Expected exception when checking for a false value')
+  t.throws(function () {
+    const fnull = REC.checkBoolean(null) // test for null
+    assert(fnull === false) // never executed
+  }, Error, 'Expected exception when checking for a false value')
+
+  const tn = REC.checkBoolean(1 + 1 === 2)
+  t.ok(tn)
+  t.equal(tn, true)
+  t.throws(function () {
+    const fn = REC.checkBoolean(1 + 1 === 1)
+    assert(fn === false) // never executed
+  }, Error, 'Expected exception when checking for a false value')
+
+  const es = 'abc'
+  const ts = REC.checkBoolean(es === 'abc')
+  t.ok(ts)
+  t.equal(ts, true)
+  t.throws(function () {
+    const fs = REC.checkBoolean(es !== 'abc')
+    assert(fs === false) // never executed
+  }, Error, 'Expected exception when checking for a false value')
+
+  t.end()
+})
+
+/** @test {RuntimeEnvChecker} */
+test('ensure number of cpu available (total) is managed in the right way', (t) => {
+  t.comment('testing getAvailableCpu')
+
+  const num = REC.getAvailableCpu()
+  t.ok(num)
+  t.equal(typeof num, 'number')
+  t.ok(num >= 1) // expect at least 1 total cpu
+
+  const tnum = REC.checkBoolean(num >= 1)
+  t.ok(tnum)
+  t.equal(tnum, true)
+  t.throws(function () {
+    // real-world example: throw if total number of available cpu is less than x ...
+    const fnum = REC.checkBoolean(num < 65535) // where 2**16 = 65536
+    assert(fnum === false) // never executed
+  }, Error, 'Expected exception when checking for a false value')
+
+  t.end()
 })
