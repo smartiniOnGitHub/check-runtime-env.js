@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.3.0](https://github.com/smartiniOnGitHub/check-runtime-env.js/releases/tag/0.3.0) (unreleased)
+## [0.3.0](https://github.com/smartiniOnGitHub/check-runtime-env.js/releases/tag/0.3.0) (2022-03-26)
 Summary Changelog:
 - Update requirements to Node.js 10 LTS (10.13.0 or later)
 - Use Node.js assertions but in strict mode now
