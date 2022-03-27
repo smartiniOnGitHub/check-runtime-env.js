@@ -4,8 +4,6 @@
   [![NPM Downloads](https://img.shields.io/npm/dm/check-runtime-env.svg?style=flat)](https://npmjs.org/package/check-runtime-env/)
   [![Code Style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
   [![Coverage Status](https://coveralls.io/repos/github/smartiniOnGitHub/check-runtime-env.js/badge.svg?branch=master)](https://coveralls.io/github/smartiniOnGitHub/check-runtime-env.js/?branch=master)
-  [![dependencies Status](https://david-dm.org/smartiniOnGitHub/check-runtime-env.js/status.svg)](https://david-dm.org/smartiniOnGitHub/check-runtime-env.js)
-  [![devDependencies Status](https://david-dm.org/smartiniOnGitHub/check-runtime-env.js/dev-status.svg)](https://david-dm.org/smartiniOnGitHub/check-runtime-env.js?type=dev)
   [![license - APACHE-2.0](https://img.shields.io/npm/l/check-runtime-env.svg)](http://opensource.org/licenses/APACHE-2.0)
 
 Node.js implementation of a checker for some runtime environment properties.
