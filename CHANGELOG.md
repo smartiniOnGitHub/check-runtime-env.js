@@ -4,6 +4,8 @@
 Summary Changelog:
 - Update requirements to Node.js 14 LTS (14.15.0)
 - Ensure all is good as before
+- Update errors raised (by checkers) when no variable name is given
+- Simplify Tap tests execution and small improvements in code coverage
 
 ## [0.3.0](https://github.com/smartiniOnGitHub/check-runtime-env.js/releases/tag/0.3.0) (2022-03-26)
 Summary Changelog:

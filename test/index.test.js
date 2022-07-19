@@ -224,7 +224,7 @@ test('ensure utility methods on env vars works in the right way', (t) => {
   if (REC.isEnvVarDefined('NODE_ENV')) {
     t.plan(9)
   } else {
-    t.plan(5)
+    t.plan(6)
   }
 
   t.comment('testing checkEnvVarDefined and related utility methods')
@@ -250,24 +250,27 @@ test('ensure utility methods on env vars works in the right way', (t) => {
     assert(check === false) // never executed
   }, Error, 'Expected exception when checking for defined env var with wrong arguments')
   // could be undefined, so I do the following test only when it's defined
+  const nodeEnv = REC.getNodeEnv()
+  const nodeEnvIsProduction = REC.isNodeEnvProduction()
   if (REC.isEnvVarDefined('NODE_ENV')) {
     t.ok(REC.checkEnvVarDefined('NODE_ENV'))
-    const nodeEnv = REC.getNodeEnv()
     switch (nodeEnv) {
       case 'production':
         t.ok(nodeEnv)
-        t.ok(REC.isNodeEnvProduction())
+        t.ok(nodeEnvIsProduction)
         t.ok(REC.checkNodeEnvProduction())
         break
       default:
         t.ok(!nodeEnv)
-        t.ok(!REC.isNodeEnvProduction())
+        t.ok(!nodeEnvIsProduction)
         t.throws(function () {
           const check = REC.checkNodeEnvProduction()
           assert(check === false) // never executed
         }, Error, 'Expected exception when checking for defined env var with wrong arguments')
         break
     }
+  } else {
+    t.notOk(nodeEnv)
   }
   t.comment('testing checkEnvVarDefined and related utility methods finished\n\n\n') // workaround to have all comments visible
   t.end()
@@ -299,7 +302,7 @@ test('ensure some general check functions works in the right way', (t) => {
   t.ok(ts)
   t.equal(ts, true)
   t.throws(function () {
-    const fs = REC.checkBoolean(es !== 'abc')
+    const fs = REC.checkBoolean(es !== 'abc', 'es')
     assert(fs === false) // never executed
   }, Error, 'Expected exception when checking for a false value')
 
@@ -359,7 +362,7 @@ test('ensure functions/checks on strict mode works in the right way', (t) => {
   t.equal(typeof safe, 'boolean')
   t.equal(safe, true)
 
-  const ensureSafeMode = REC.checkBoolean(safe)
+  const ensureSafeMode = REC.checkBoolean(safe, 'safe')
   t.ok(ensureSafeMode)
 
   const checkSafeMode = REC.checkStrictMode()

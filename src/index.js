@@ -184,7 +184,13 @@ class RuntimeEnvChecker {
    */
   static checkStringNotEmpty (arg, name = '') {
     if (RuntimeEnvChecker.isStringNotEmpty(arg) !== true) {
-      throw new Error(`RuntimeEnvChecker - the string '${name}' must be not empty`)
+      let msg
+      if (RuntimeEnvChecker.isStringNotEmpty(name)) {
+        msg = `RuntimeEnvChecker - the string '${name}' must be not empty`
+      } else {
+        msg = 'RuntimeEnvChecker - the string var/const must be not empty'
+      }
+      throw new Error(msg)
     }
     return true
   }
@@ -201,7 +207,13 @@ class RuntimeEnvChecker {
    */
   static checkEnvVarDefined (name) {
     if (RuntimeEnvChecker.isEnvVarDefined(name) !== true) {
-      throw new Error(`RuntimeEnvChecker - the env var '${name}' must be defined and not empty`)
+      let msg
+      if (RuntimeEnvChecker.isStringNotEmpty(name)) {
+        msg = `RuntimeEnvChecker - the env var '${name}' must be defined and not empty`
+      } else {
+        msg = 'RuntimeEnvChecker - the env var must be defined and not empty'
+      }
+      throw new Error(msg)
     }
     return true
   }
@@ -297,7 +309,13 @@ class RuntimeEnvChecker {
    */
   static checkBoolean (arg, name = '') {
     if (RuntimeEnvChecker.isBoolean(arg) !== true || arg !== true) {
-      throw new Error(`RuntimeEnvChecker - the boolean '${name}' must be true`)
+      let msg
+      if (RuntimeEnvChecker.isStringNotEmpty(name)) {
+        msg = `RuntimeEnvChecker - the boolean '${name}' must be true`
+      } else {
+        msg = 'RuntimeEnvChecker - the boolean var/const must be true'
+      }
+      throw new Error(msg)
     }
     return true
   }

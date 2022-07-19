@@ -42,6 +42,8 @@ assert(expectedNodeVersion !== null)
 const expectedNPMVersion = engines.npm
 assert(expectedNPMVersion !== null)
 
+console.log(`Total CPU available: ${RuntimeEnvChecker.getAvailableCpu()}`)
+
 console.log(`Node.js current version: ${nodeVersion}`)
 console.log(`Node.js version expected in 'package.json': ${engines.node}`)
 console.log(`NPM current version: ${npmVersion}`)
