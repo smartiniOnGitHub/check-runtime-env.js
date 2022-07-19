@@ -116,7 +116,7 @@ test('ensure version checks are done in the right way', (t) => {
     t.comment(`Node.js version expected in 'package.json': ${engines.node}`)
 
     t.ok(REC.checkVersionOfNode()) // ok because of default values
-    t.ok(REC.checkVersionOfNode('10.15.3')) // ok because of default values
+    t.ok(REC.checkVersionOfNode('14.15.0')) // ok because of default values
     t.ok(REC.checkVersionOfNode(undefined)) // ok because of default values
     t.ok(REC.checkVersionOfNode(undefined, undefined)) // ok because of default values
     t.throws(function () {
@@ -124,7 +124,7 @@ test('ensure version checks are done in the right way', (t) => {
       assert(check === false) // never executed
     }, Error, 'Expected exception when checking node version with wrong arguments')
     t.throws(function () {
-      const check = REC.checkVersionOfNode('10.15.3', null)
+      const check = REC.checkVersionOfNode('14.15.0', null)
       assert(check === false) // never executed
     }, Error, 'Expected exception when checking node version with wrong arguments')
     t.throws(function () {
@@ -139,9 +139,9 @@ test('ensure version checks are done in the right way', (t) => {
     t.ok(REC.checkVersionOfNode('8.16.0', '>=8.9.0'))
     t.ok(REC.checkVersion('10.13.0', '>=8.9.0'))
     t.ok(REC.checkVersion('10.13.0', '>=8.9.0 <12.0.0'))
-    t.ok(REC.checkVersion('10.15.3', engines.node))
-    t.ok(REC.checkVersion('10.15.3', `${engines.node}`))
-    t.equal(REC.checkVersionOfNode('10.15.3', engines.notExisting), true) // ok because of default values with a not existing expected value (undefined)
+    t.ok(REC.checkVersion('14.15.0', engines.node))
+    t.ok(REC.checkVersion('14.15.0', `${engines.node}`))
+    t.equal(REC.checkVersionOfNode('14.15.0', engines.notExisting), true) // ok because of default values with a not existing expected value (undefined)
   }
 
   {

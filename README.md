@@ -85,7 +85,7 @@ the release wanted, and if not throw an Error (or instead log a Warning).
 
 ## Requirements
 
-Node.js 10 LTS (but recommended 10.24.1) or later; NPM 6.8.0 or later.
+Node.js 14 LTS (14.15.0) or later; NPM 6.8.0 or later.
 
 
 ## Sources
