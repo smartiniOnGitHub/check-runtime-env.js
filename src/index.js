@@ -23,6 +23,7 @@
 
 const semver = require('semver')
 const os = require('os')
+const path = require('path')
 
 /** Get the host name where this code is runninng */
 const hostname = os.hostname()
@@ -385,6 +386,104 @@ class RuntimeEnvChecker {
   static checkStrictMode () {
     if (RuntimeEnvChecker.isStrictMode() !== true) {
       throw new Error('RuntimeEnvChecker - JavaScript strict mode must be enabled')
+    }
+    return true
+  }
+
+  /**
+   * Utility method that returns if the given source file is running
+   * with JavaScript in ES Module.
+   * Note that the logic here is approximated and uses:
+   * - first the given filename (pass `__filename` to analyze current file where this function is called)
+   * - the then given folder name to try to read 'package.json' from there (pass `__dirname` for example)
+   * - other simple logic.
+   * but in some cases (for example if given both) I don't check here the correctness of both values
+   * (for example the given filename could not belong to the given foldername nor its parent,
+   * so different rules could be applied by the JavaScript engine, and results here could not be precise).
+   *
+   * @static
+   * @param {string} filename the name of the file to analyze
+   * @param {string} foldername the name of the folder where to search the project definition file
+   * @return {boolean} true if it seems an ESModule
+   * @throws {Error} if both arguments are undefined, null or empty
+   */
+  static isESModule (filename, foldername) {
+    if (!RuntimeEnvChecker.isStringNotEmpty(filename) && !RuntimeEnvChecker.isStringNotEmpty(foldername)) {
+      throw new Error('RuntimeEnvChecker - specify at least filename or foldername')
+    }
+    let isModule = false
+    // console.log(`DEBUG: file:${filename}, folder:${foldername}`)
+
+    if (RuntimeEnvChecker.isStringNotEmpty(filename)) {
+      const ext = path.extname(filename)
+      switch (ext) {
+        case '.js':
+          // console.log('JS source found, check related "package.json" file for ESModule type')
+          break
+        case '.cjs':
+          // console.log('CommonJS module found')
+          return false
+          // break
+        case '.mjs':
+          // console.log('ES module found')
+          return true
+          // break
+        default:
+          // console.log(`Unable to match module extension for ${ext}`)
+          isModule = false
+      }
+    }
+
+    if (RuntimeEnvChecker.isStringNotEmpty(foldername)) {
+      // try to read related project definition file and its "type" attribute (if present)
+      let projectType
+      try {
+        projectType = require(`${foldername}/package.json`).type
+      } catch (e) {
+        // probably file not found, retry with parent folder
+        try {
+          projectType = require(`${foldername}/../package.json`).type
+        } catch (e) {
+        // probably file not found, but stop here
+        }
+      }
+
+      if (RuntimeEnvChecker.isStringNotEmpty(projectType)) {
+        // console.log(`Found "package.json" in the given folder (or in its parent), with type attribute value: ${projectType}`)
+        switch (projectType) {
+          case 'commonjs':
+            // console.log('CommonJS module found')
+            return false
+            // break
+          case 'module':
+            // console.log('ES module found')
+            return true
+            // break
+          default:
+            // console.log(`Unable to match module type for ${projectType}`)
+            isModule = false
+        }
+      }
+    }
+
+    return isModule
+  }
+
+  /**
+   * Ensure that current code is running
+   * with JavaScript as ES Module.
+   *
+   * See {@link RuntimeEnvChecker.isESModule}.
+   *
+   * @static
+   * @param {string} filename the name of the file to analyze
+   * @param {string} foldername the name of the folder where to search the project definition file
+   * @return {boolean} true if ES Module is enabled
+   * @throws {Error} if it's a false value or it's null or undefined
+   */
+  static checkESModule (filename, foldername) {
+    if (RuntimeEnvChecker.isESModule(filename, foldername) !== true) {
+      throw new Error('RuntimeEnvChecker - JavaScript ES Module required')
     }
     return true
   }

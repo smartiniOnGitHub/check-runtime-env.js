@@ -370,3 +370,37 @@ test('ensure functions/checks on strict mode works in the right way', (t) => {
 
   t.end()
 })
+
+/** @test {RuntimeEnvChecker} */
+test('ensure isESModule works in the right way', (t) => {
+  t.comment('testing isESModule')
+
+  t.throws(function () {
+    const isMod = REC.isESModule()
+    assert(isMod === true) // never executed
+  }, Error, 'Expected exception when checking for ES Module but without specifying arguments')
+
+  {
+    const isMod = REC.isESModule(__filename)
+    t.notOk(isMod)
+  }
+
+  {
+    const isMod = REC.isESModule(null, __dirname)
+    t.notOk(isMod)
+  }
+
+  {
+    const isMod = REC.isESModule(__filename, __dirname)
+    t.notOk(isMod)
+  }
+
+  {
+    // try with a minimal project definition for a fake ES Module
+    const path = require('path')
+    const isMod = REC.isESModule(null, path.join(__dirname, '/fake-module'))
+    t.ok(isMod)
+  }
+
+  t.end()
+})

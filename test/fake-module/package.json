@@ -1,0 +1,13 @@
+{
+  "name": "check-runtime-env_fake-module",
+  "version": "1.0.0",
+  "description": "Minimal project definition for a fake ESModule",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+  },
+  "type": "module",
+  "author": "Sandro Martini <sandro.martini@gmail.com>",
+  "license": "Apache-2.0"
+}
