@@ -22,6 +22,7 @@
 const assert = require('assert').strict
 
 console.log('Sample script: start execution ...\n')
+console.log(`Script file: ${__filename}`)
 
 // reference the library, not needed if using destructuring assignment, see below
 const RuntimeEnvChecker = require('../src/') // from local path
@@ -41,6 +42,8 @@ const expectedNodeVersion = engines.node
 assert(expectedNodeVersion !== null)
 const expectedNPMVersion = engines.npm
 assert(expectedNPMVersion !== null)
+const isESModule = RuntimeEnvChecker.isESModule(__filename)
+assert(isESModule === false)
 
 console.log(`Total CPU available: ${RuntimeEnvChecker.getAvailableCpu()}`)
 
@@ -48,6 +51,7 @@ console.log(`Node.js current version: ${nodeVersion}`)
 console.log(`Node.js version expected in 'package.json': ${engines.node}`)
 console.log(`NPM current version: ${npmVersion}`)
 console.log(`NPM version expected in 'package.json': ${engines.npm}`)
+console.log(`The script is running as ES Module: ${isESModule}`)
 
 console.log('Doing some tests; note that a check not satisfied will throw Error ...')
 console.log(`Check version of Node, using defaults, success: ${RuntimeEnvChecker.checkVersionOfNode()}`)
@@ -77,5 +81,6 @@ console.log(`strict mode enabled : ${checkSafeMode}`)
 console.log('No more tests.')
 
 console.log('\nSample script: end execution.')
+console.log('----')
 assert(true) // all good here
 // end of script

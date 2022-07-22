@@ -16,6 +16,8 @@
 'use strict'
 
 const assert = require('assert').strict
+const path = require('path')
+
 const test = require('tap').test
 
 const REC = require('../src/') // reference the library
@@ -221,12 +223,6 @@ test('ensure generic utility methods works in the right way', (t) => {
 
 /** @test {RuntimeEnvChecker} */
 test('ensure utility methods on env vars works in the right way', (t) => {
-  if (REC.isEnvVarDefined('NODE_ENV')) {
-    t.plan(9)
-  } else {
-    t.plan(6)
-  }
-
   t.comment('testing checkEnvVarDefined and related utility methods')
   t.comment(`Node.js environment is: '${process.env.NODE_ENV}'`)
   t.throws(function () {
@@ -249,7 +245,16 @@ test('ensure utility methods on env vars works in the right way', (t) => {
     const check = REC.checkEnvVarDefined('NOT_EXISTING')
     assert(check === false) // never executed
   }, Error, 'Expected exception when checking for defined env var with wrong arguments')
-  // could be undefined, so I do the following test only when it's defined
+
+  // define a sample env var, then verify and check if it's defined
+  const sampleEnvVarName = 'SAMPLE_ENV_VAR'
+  process.env[sampleEnvVarName] = 'env var value'
+  t.ok(REC.isEnvVarDefined(sampleEnvVarName))
+  t.ok(REC.checkEnvVarDefined(sampleEnvVarName))
+  delete process.env[sampleEnvVarName]
+  t.notOk(REC.isEnvVarDefined(sampleEnvVarName))
+
+  // NODE_ENV env var could be undefined, so I do the following test only when it's defined
   const nodeEnv = REC.getNodeEnv()
   const nodeEnvIsProduction = REC.isNodeEnvProduction()
   if (REC.isEnvVarDefined('NODE_ENV')) {
@@ -377,29 +382,82 @@ test('ensure isESModule works in the right way', (t) => {
 
   t.throws(function () {
     const isMod = REC.isESModule()
-    assert(isMod === true) // never executed
+    assert(isMod === true) // never executed, but false anyway
+  }, Error, 'Expected exception when querying for ES Module but without specifying arguments')
+  t.throws(function () {
+    const ensureIsESMod = REC.checkESModule()
+    assert(ensureIsESMod === true) // never executed, but false anyway
   }, Error, 'Expected exception when checking for ES Module but without specifying arguments')
 
   {
     const isMod = REC.isESModule(__filename)
     t.notOk(isMod)
+    t.throws(function () {
+      const ensureIsESMod = REC.checkESModule(__filename)
+      assert(ensureIsESMod === true) // never executed, but false anyway
+    }, Error, 'Expected exception when checking for ES Module on a non-esm source/folder')
   }
 
   {
     const isMod = REC.isESModule(null, __dirname)
     t.notOk(isMod)
+    t.throws(function () {
+      const ensureIsESMod = REC.checkESModule(null, __dirname)
+      assert(ensureIsESMod === true) // never executed, but false anyway
+    }, Error, 'Expected exception when checking for ES Module on a non-esm source/folder')
   }
 
   {
     const isMod = REC.isESModule(__filename, __dirname)
     t.notOk(isMod)
+    t.throws(function () {
+      const ensureIsESMod = REC.checkESModule(__filename, __dirname)
+      assert(ensureIsESMod === true) // never executed, but false anyway
+    }, Error, 'Expected exception when checking for ES Module on a non-esm source/folder')
   }
 
   {
     // try with a minimal project definition for a fake ES Module
-    const path = require('path')
-    const isMod = REC.isESModule(null, path.join(__dirname, '/fake-module'))
+    const moduleFolder = path.join(__dirname, '/fake-module')
+    const isMod = REC.isESModule(null, moduleFolder)
     t.ok(isMod)
+    const ensureIsESMod = REC.checkESModule(null, moduleFolder)
+    t.ok(ensureIsESMod)
+  }
+
+  {
+    // try with a minimal project definition for a fake Module but with a bad/unknown type specified
+    const moduleFolder = path.join(__dirname, '/fake-module-no-type')
+    const isMod = REC.isESModule(null, moduleFolder)
+    t.notOk(isMod)
+    t.throws(function () {
+      const ensureIsESMod = REC.checkESModule(null, moduleFolder)
+      assert(ensureIsESMod === true) // never executed, but false anyway
+    }, Error, 'Expected exception when checking for ES Module on a non-esm source/folder')
+  }
+
+  {
+    // try with a minimal source in a fake Module
+    const moduleFolder = path.join(__dirname, '/fake-module-no-type')
+    const sourceFile = path.join(moduleFolder, 'sample.cjs')
+    const isMod = REC.isESModule(sourceFile)
+    t.notOk(isMod)
+  }
+
+  {
+    // try with a minimal source in a fake Module
+    const moduleFolder = path.join(__dirname, '/fake-module-no-type')
+    const sourceFile = path.join(moduleFolder, 'sample.mjs')
+    const isMod = REC.isESModule(sourceFile)
+    t.ok(isMod)
+  }
+
+  {
+    // try with a minimal source in a fake Module
+    const moduleFolder = path.join(__dirname, '/fake-module-no-type')
+    const sourceFile = path.join(moduleFolder, 'sample.ts')
+    const isMod = REC.isESModule(sourceFile)
+    t.notOk(isMod)
   }
 
   t.end()
