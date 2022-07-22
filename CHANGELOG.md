@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.4.0](https://github.com/smartiniOnGitHub/check-runtime-env.js/releases/tag/0.4.0) (unreleased)
+## [0.4.0](https://github.com/smartiniOnGitHub/check-runtime-env.js/releases/tag/0.4.0) (2022-07-22)
 Summary Changelog:
 - Update requirements to Node.js 14 LTS (14.15.0)
 - Ensure all is good as before
