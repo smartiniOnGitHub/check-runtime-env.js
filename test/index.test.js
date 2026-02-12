@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2023 the original author or authors.
+ * Copyright 2019-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,11 @@ const nodeVersion = process.version
 assert(nodeVersion !== null)
 const engines = require('../package.json').engines
 assert(engines !== null)
+
+const minNodeVersion = '20.9.0' // extracted from package.json for testing purposes
+assert(minNodeVersion !== null)
+const minNpmVersion = '10.1.0' // extracted from package.json for testing purposes
+assert(minNpmVersion !== null)
 
 /** @test {RuntimeEnvChecker} */
 test('ensure objects exported by index script, exists and are of the right type', (t) => {
@@ -118,7 +123,7 @@ test('ensure version checks are done in the right way', (t) => {
     t.comment(`Node.js version expected in 'package.json': ${engines.node}`)
 
     t.ok(REC.checkVersionOfNode()) // ok because of default values
-    t.ok(REC.checkVersionOfNode('14.15.0')) // ok because of default values
+    t.ok(REC.checkVersionOfNode(minNodeVersion)) // ok because of default values
     t.ok(REC.checkVersionOfNode(undefined)) // ok because of default values
     t.ok(REC.checkVersionOfNode(undefined, undefined)) // ok because of default values
     t.throws(function () {
@@ -126,7 +131,7 @@ test('ensure version checks are done in the right way', (t) => {
       assert(check === false) // never executed
     }, Error, 'Expected exception when checking node version with wrong arguments')
     t.throws(function () {
-      const check = REC.checkVersionOfNode('14.15.0', null)
+      const check = REC.checkVersionOfNode(minNodeVersion, null)
       assert(check === false) // never executed
     }, Error, 'Expected exception when checking node version with wrong arguments')
     t.throws(function () {
@@ -141,9 +146,9 @@ test('ensure version checks are done in the right way', (t) => {
     t.ok(REC.checkVersionOfNode('8.16.0', '>=8.9.0'))
     t.ok(REC.checkVersion('10.13.0', '>=8.9.0'))
     t.ok(REC.checkVersion('10.13.0', '>=8.9.0 <12.0.0'))
-    t.ok(REC.checkVersion('14.15.0', engines.node))
-    t.ok(REC.checkVersion('14.15.0', `${engines.node}`))
-    t.equal(REC.checkVersionOfNode('14.15.0', engines.notExisting), true) // ok because of default values with a not existing expected value (undefined)
+    t.ok(REC.checkVersion(minNodeVersion, engines.node))
+    t.ok(REC.checkVersion(minNodeVersion, `${engines.node}`))
+    t.equal(REC.checkVersionOfNode(minNodeVersion, engines.notExisting), true) // ok because of default values with a not existing expected value (undefined)
   }
 
   {
@@ -191,7 +196,7 @@ test('ensure version checks are done in the right way', (t) => {
       const check = REC.checkVersionOfNpm('6.4.0', '>=6.4.1')
       assert(check === false) // never executed
     }, Error, 'Expected exception when checking npm version with wrong values')
-    t.ok(REC.checkVersionOfNpm('6.8.0')) // ok because of default values
+    t.ok(REC.checkVersionOfNpm(minNpmVersion)) // ok because of default values
     t.ok(REC.checkVersionOfNpm('6.4.1', '>=6.4.1'))
   }
 
